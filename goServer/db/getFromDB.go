@@ -14,7 +14,7 @@ func GetFromDB() []entity.Results{
 	}
 	defer db.Close()
 
-	rows, err := db.Query("select id,video_name,result,date from results order by date desc;")
+	rows, err := db.Query("select id,video_name,result,date from waste order by date desc;")
     if err != nil {
         panic(err)
     }

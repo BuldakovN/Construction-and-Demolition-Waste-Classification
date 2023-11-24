@@ -5,6 +5,49 @@ const toBase64 = file => new Promise((resolve, reject) => {
     reader.onerror = reject;
   });
 
+async function getData(){
+  let response = await fetch("/data");
+  let str
+  if (response.ok) { // если HTTP-статус в диапазоне 200-299
+      // получаем тело ответа (см. про этот метод ниже)
+      str = await response.text();
+  } else {
+      alert("Ошибка HTTP: " + response.status);
+  }
+  alert(str)
+  ///////////
+  let url = "/xls"
+    let options = {
+        method: 'GET',
+        headers: new Headers({
+            'Content-Type': 'application/json',
+        }),
+        mode: 'cors',
+        cache: 'default'
+    };
+    let strMimeType;
+    let strFileName;
+
+    //Perform a GET Request to server
+    fetch(url, options)
+    .then(function (response) {
+        let contentType = response.headers.get("Content-Type"); //Get File name from content type
+        strMimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        strFileName = contentType.split(";")[1];
+        return response.blob();
+
+    }).then(function (myBlob) {
+        let downloadLink = window.document.createElement('a');
+        downloadLink.href = window.URL.createObjectURL(new Blob([myBlob], { type: strMimeType }));
+        downloadLink.download = strFileName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }).catch((e) => {
+        console.log("e", e);
+    });
+
+}
 
 async function workWithVideo(){
 

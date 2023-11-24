@@ -8,9 +8,12 @@ import (
 	"maslov/hack/db"
 	"maslov/hack/entity"
 	"net/http"
+	"os"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"github.com/xuri/excelize/v2"
 )
 
 //var host ="model"
@@ -68,7 +71,7 @@ func main() {
   r.LoadHTMLGlob("templates/*.html")
   r.Static("/css", "./css")
 	r.StaticFile("/favicon.ico", "./resources/favicon.ico")
-	r.StaticFile("/load.gif", "./css/images/load.gif")
+	r.StaticFile("/Waste.xlsx", "./xls/Waste.xlsx")
 
 
 
@@ -136,6 +139,64 @@ func main() {
 		c.JSON(200,res)
     	//log.Println(res["b64"])
 		resp.Body.Close()
+	})
+  
+  r.GET("/xls", func(c *gin.Context) {
+    Openfile, err := os.Open("xls/Waste.xlsx") //Open the file to be downloaded later
+    
+  
+    if err != nil {		
+      http.Error(c.Writer, "File not found.", 404) //return 404 if file is not found
+      return
+    }
+  
+    tempBuffer := make([]byte, 512) //Create a byte array to read the file later
+    Openfile.Read(tempBuffer) //Read the file into  byte
+    FileContentType := http.DetectContentType(tempBuffer) //Get file header
+  
+    FileStat, _ := Openfile.Stat() //Get info from file
+    FileSize := strconv.FormatInt(FileStat.Size(), 10) //Get file size as a string
+  
+    Filename := "result"
+  
+    //Set the headers
+    c.Writer.Header().Set("Content-Type", FileContentType+";"+Filename)
+    c.Writer.Header().Set("Content-Length", FileSize)
+  
+    Openfile.Seek(0, 0) //We read 512 bytes from the file already so we reset the offset back to 0
+    io.Copy(c.Writer, Openfile) //'Copy' the file to the client
+    Openfile.Close() //Close after function return
+	})
+
+  r.GET("/data",func(c *gin.Context) {
+		results := db.GetFromDB()
+		
+		
+    f := excelize.NewFile()
+    defer func() {
+      if err := f.Close(); err != nil {
+          log.Println(err)
+      }
+    }()
+    f.SetCellValue("Sheet1", "A1", "номер")
+    f.SetCellValue("Sheet1", "B1", "имя видео")
+    f.SetCellValue("Sheet1", "C1", "результат")
+    f.SetCellValue("Sheet1", "D1", "дата обработки")
+    n:=0
+		for i, result := range results {
+      n = i+2
+      f.SetCellValue("Sheet1", "A"+strconv.Itoa(n), strconv.Itoa(result.Id))
+      f.SetCellValue("Sheet1", "B"+strconv.Itoa(n), result.Video_name)
+      f.SetCellValue("Sheet1", "C"+strconv.Itoa(n), result.Result)
+      f.SetCellValue("Sheet1", "D"+strconv.Itoa(n), result.Date)
+      //log.Println(result)
+		}
+		
+    if err := f.SaveAs("xls/Waste.xlsx"); err != nil {
+      log.Println(err)
+  }
+		c.String(200,"выгрузка завершена")
+
 	})
   r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
