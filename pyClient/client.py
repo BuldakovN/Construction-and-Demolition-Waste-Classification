@@ -13,7 +13,7 @@ def treatmenImagetVideo(json):
     fh = open("video/video.mp4", "wb")
     fh.write(base64.b64decode(json["b64"]))
     fh.close()
-    answer = {"result":"видео загружено"}
+    answer = {"result":"видео загружено","video_name":json["video_name"]}
 
     return answer
 

@@ -8,6 +8,7 @@ type Form struct{
 type FormBase64 struct{
 	TYPE string `json:"type" binding:"required"`
 	BASE64 string `json:"b64" binding:"required"`
+	FILE_NAME string `json:"video_name" binding:"required"`
 }
 
 type FormBase64Double struct{

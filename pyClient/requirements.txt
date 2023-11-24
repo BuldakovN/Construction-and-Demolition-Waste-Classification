@@ -1,6 +1,1 @@
 flask
-torchvision
-pytorchvideo
-fvcore
-opencv-python-headless
-moviepy

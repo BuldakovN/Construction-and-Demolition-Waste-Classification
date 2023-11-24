@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"log"
+	"maslov/hack/db"
 	"maslov/hack/entity"
 	"net/http"
 
@@ -59,6 +60,8 @@ func writeMessagesToJs(mess []byte){
 }
 
 func main() {
+  db.InitDataBase()
+
   clients = make(map[*websocket.Conn]bool)
   r := gin.Default()
   r.Static("/js", "./js")
@@ -66,6 +69,9 @@ func main() {
   r.Static("/css", "./css")
 	r.StaticFile("/favicon.ico", "./resources/favicon.ico")
 	r.StaticFile("/load.gif", "./css/images/load.gif")
+
+
+
   r.GET("/",func(c *gin.Context) {
     c.HTML(
 			http.StatusOK,
@@ -126,6 +132,7 @@ func main() {
 		log.Println(res["result"])
 		log.Println("Ответ на js")
 		//entity.Base64ToFile(res["b64"].(string))
+    db.WriteDataToDB(res["video_name"].(string),res["result"].(string))
 		c.JSON(200,res)
     	//log.Println(res["b64"])
 		resp.Body.Close()

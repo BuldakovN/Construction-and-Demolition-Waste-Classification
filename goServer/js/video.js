@@ -7,6 +7,11 @@ const toBase64 = file => new Promise((resolve, reject) => {
 
 
 async function workWithVideo(){
+
+  if(document.getElementById("videoFile").files[0]=== undefined){
+    alert("Вы не выбрали видео")
+    return
+  }
     let loadingGif = document.createElement("img")
     let div = document.getElementById("videoDiv")
     while (div.firstChild) {
@@ -17,17 +22,16 @@ async function workWithVideo(){
 
     div.appendChild(loadingGif)
 
-    if(document.getElementById("videoFile").files[0]=== undefined){
-      alert("Вы не выбрали видео")
-      return
-    }
+
     let videoFile = document.getElementById("videoFile").files[0]
+    
     let res_video = await toBase64(videoFile)
     let slv = res_video.split(",")
   
     var dataObj = {
       type : slv[0],
-      b64 : slv[1]
+      b64 : slv[1],
+      video_name : videoFile.name
     }
   
     var json = JSON.stringify(dataObj);
@@ -62,5 +66,6 @@ async function workWithVideo(){
     //console.log(Object.keys(data["frames"]));
     //console.log(data["result"])
     document.getElementById("result").textContent = data["result"]
+    document.getElementById("video_name").textContent = data["video_name"]
     return
   }
