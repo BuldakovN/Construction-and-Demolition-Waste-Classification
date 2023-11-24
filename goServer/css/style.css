@@ -1,0 +1,109 @@
+*{
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+    
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #131313;
+}
+
+nav{
+    background: #53377A;
+    height: 60px;
+    width: 100%;
+}
+nav ul{
+    float: right;
+    margin-right: 20px;
+}
+nav ul li{
+    display: inline-block;
+    line-height: 60px;
+    margin: 0 5px;
+}
+nav ul li a{
+    color: white;
+    font-size: 15px;
+    text-transform: uppercase;
+    padding: 7px 13px;
+    border-radius: 3px;
+
+}
+
+a.active, a:hover{
+    background: #7851A9;
+    transition: .5s;
+}
+
+.dropArea {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    width: 510px;
+    height: 300px;
+    background-color: #D9D9D9;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+}
+#container{
+    text-align: center;
+}
+button {
+    display: inline-block;	
+	box-sizing: border-box;
+    text-align: center;
+    padding: 7px 2rem;
+    margin: 1rem 0;
+    border: none;  
+	border-radius: 6px;
+    font-size: 14px;
+	font-weight: 500;
+    cursor: pointer;
+    color: #fff;
+	background-color: #862ad7;
+	box-shadow: 0 2px #5d217f;
+	cursor: pointer;
+	touch-action: manipulation; 
+
+}
+button:hover { background-color: #7101bb;}
+button:disabled {
+	background-color: #8f6cb5;
+	pointer-events: none;
+}
+
+.Result{
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 400px;
+    font-size: 14px;
+    margin-top: 10px;
+}
+.Result thead tr{
+    background-color: #8f6cb5;
+    color: white;
+    text-align: left;
+}
+.Result tbody tr{
+    background-color: #D9D9D9;
+    color: black;
+    text-align: left;
+}
+.Result th{
+    padding: 12px 15px;
+    border-radius: 6px 6px 0 0;
+} 
+.Result td{
+    padding: 12px 15px;
+    border-radius: 0 0 6px 6px;
+}
